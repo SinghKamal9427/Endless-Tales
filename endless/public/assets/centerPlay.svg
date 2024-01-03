@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="59" height="59" viewBox="0 0 59 59">
+  <g id="pause-circle" transform="translate(2.498 2.5)">
+    <circle id="Oval" cx="27" cy="27" r="27" transform="translate(0.002)" fill="none" stroke="#211f27" stroke-linecap="round" stroke-linejoin="round" stroke-width="5"/>
+    <path id="Shape" d="M8,23.148V7" transform="translate(13.53 11.839)" fill="none" stroke="#211f27" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" fill-rule="evenodd"/>
+    <path id="Shape-2" data-name="Shape" d="M12,23.148V7" transform="translate(20.295 11.839)" fill="none" stroke="#211f27" stroke-linecap="round" stroke-linejoin="round" stroke-width="5" fill-rule="evenodd"/>
+  </g>
+</svg>

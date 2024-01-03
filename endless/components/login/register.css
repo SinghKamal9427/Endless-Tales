@@ -1,0 +1,10 @@
+.grid-col-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .grid-col-3 > button:nth-last-child(2) {
+    grid-column: 2; 
+    
+    /* Make the last child span all three columns */
+  }

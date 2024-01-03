@@ -1,0 +1,16 @@
+[
+    {
+        "icon" : "/assets/icon5.png",
+        "head" : "Choose Options",
+        "desc": "To start your adventure, simply choose your favorite options from the list menus and let your imagination soar."
+        
+    },{
+        "icon" : "/assets/icon7.png",
+        "head" : "Generate Story",
+        "desc": "After, Choosing options click on Generate tab to generate your story as per your imagination."
+    },{
+        "icon" : "/assets/icon6.png",
+        "head" : "Read & Listen Story",
+        "desc": "Now your story generated and ready for you with some cool pictures and listen to your story being read aloud!"
+    }
+]
