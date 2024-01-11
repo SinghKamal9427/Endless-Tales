@@ -1,10 +1,15 @@
-import { useState } from "react";
+import {  useState } from "react";
 import { Context } from "./createContextStore.jsx";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
+import {Api_Endpoints} from "../constants/endpoints.js"
+
+const dev = process.env.NODE_ENV == 'development';
+const apiUrls = dev ?  Api_Endpoints.development : Api_Endpoints.production;
 
 export default function StoreProvider({ children }) {
+
   const [data, setData] = useState([
     {
       title: "",
@@ -23,9 +28,10 @@ export default function StoreProvider({ children }) {
   const [userData, setUserData] = useState([]);
 
   const HandleGetUser = async () => {
+    const apiUrl =  process.env.NODE_ENV == 'development' ? Api_Endpoints.development : Api_Endpoints.production
     if(localStorage.getItem("token")){
     try {
-      const user = await axios.get("http://localhost:4000/getUsers", {
+      const user = await axios.get(`${apiUrl}getUsers`, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       });
       return user.data;
@@ -67,6 +73,7 @@ export default function StoreProvider({ children }) {
   };
 
   const contextValue = {
+    apiUrls,
     data,
     setData,
     userData,
@@ -82,7 +89,7 @@ export default function StoreProvider({ children }) {
     isAccountSettingModal,
     handleNotified,
     handleIsAccountUserStoryModal,
-    isAccountUserStoryModal,
+    isAccountUserStoryModal    
   };
 
   return <Context.Provider value={contextValue}>{children}</Context.Provider>;

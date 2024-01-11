@@ -25,7 +25,7 @@ export default function Footer() {
         backgroundSize: "cover",
         width: "100%",
       }}
-      className="pt-[120px] pb-[60px]"
+      className="py-[120px] "
     >
       <div className="container mx-auto flex justify-between items-start">
         <div className="w-[25%] flex  justify-center">

@@ -48,14 +48,14 @@ export default function UserSteps() {
   };
 
   const loginList = [
-    <Login onNext={onNextLogin} toggleShow={toggleShow} />,
-    <ForgotPassword onNext={onNextLogin} />,
-    <OtpValidate onNext={onNextLogin} />,
-    <ResetPassword onNext={onNextLogin} />,
+    <Login onNext={onNextLogin} toggleShow={toggleShow} key={1} />,
+    <ForgotPassword onNext={onNextLogin} key={2}/>,
+    <OtpValidate onNext={onNextLogin} key={3}/>,
+    <ResetPassword onNext={onNextLogin} key={4}/>,
   ];
   const registerList = [
-    <RegisterDob onNext={onNextRegister} />,
-    <Register onNext={onNextRegister} toggleShow={toggleShow} />,
+    <RegisterDob onNext={onNextRegister} key={1}/>,
+    <Register onNext={onNextRegister} toggleShow={toggleShow} key={2}/>,
   ];
 
   return (

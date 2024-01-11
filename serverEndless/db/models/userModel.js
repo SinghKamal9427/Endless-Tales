@@ -7,6 +7,10 @@ const registerSchemea = new Schema({
   emailAddress: { type: "string", required: true },
   password: { type: "string", required: true },
   image: { type: "string", default: null },
+  name:{type:"string" , default:"Enter your name"},
+  username:{type:"string", default:function() {
+    return this.emailAddress || "Enter your email address"
+  }}
 });
 
 const RegisterModel = model("Register", registerSchemea);
@@ -26,7 +30,8 @@ const userStepsSchema = new Schema({
   date:{ type:Date , default : Date.now },
 });
 
+
 const UserSteps = model("UserSteps", userStepsSchema);
 
 
-export { RegisterModel, UserSteps };
+export { RegisterModel, UserSteps  };

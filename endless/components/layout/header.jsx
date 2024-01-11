@@ -13,6 +13,8 @@ import axios from "axios";
 import UserPng from "../../public/assets/usercopy.png";
 import { ToastContainer } from "react-toastify";
 import UserCreatedStoriesSteps from "../userStories/userCreatedStoriesSteps.jsx";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import { editUsersSchemea } from "../schemea/schemea";
 
 export default function Header() {
 
@@ -23,7 +25,7 @@ export default function Header() {
   const router = useRouter();
 
 //Custom useContext Store  
-  const { HandleGetUser, setUserData, userData, handleIsAccountModal , handleNotified, handleIsAccountSettingModal ,handleIsAccountUserStoryModal} =
+  const { HandleGetUser, setUserData, userData, handleIsAccountModal , handleNotified, handleIsAccountSettingModal ,handleIsAccountUserStoryModal ,apiUrls} =
     UseStore();
 
 
@@ -35,8 +37,8 @@ export default function Header() {
     emailAddress: "",
     password: "",
     image: null,
+    _id:""
   });
-
 
 //OnChnange event handler for ProfileEdit  
   const handleChangeValue = (e) => {
@@ -81,10 +83,11 @@ export default function Header() {
 //Updating [inputValue] for displaying value in Account Settings fields
   useEffect(() => {
     setInputValue({
-      name: userData?.dob,
-      username: userData?._id,
+      name: userData?.name,
+      username: userData?.username,
       emailAddress: userData?.emailAddress,
       password: userData?.password,
+      _id:userData?._id
     });
   }, [userData]);
 
@@ -114,18 +117,17 @@ export default function Header() {
   };
 
 //Appending user data in form for image upload and updation in account settings section  
-  const handleEditUser = async (e) => {
-    e.preventDefault();
+  const handleEditUser = async (values) => {
 
     const form = new FormData();
-    form.append("name", inputValue.name);
-    form.append("username", inputValue.username);
-    form.append("emailAddress", inputValue.emailAddress);
-    form.append("password", inputValue.password);
+    form.append("name", values.name);
+    form.append("username", values.username);
+    form.append("emailAddress", values.emailAddress);
+    form.append("password", values.password);
     form.append("image", inputValue.image);
-
+    form.append("_id", values._id);
     try {
-     const res =  await axios.post("http://localhost:4000/editUsers", form, {
+     const res =  await axios.post(`${apiUrls}editUsers`, form, {
         headers: {
           // 'Content-Type' : 'application/json'
           "Content-Type": "multipart/form-data",
@@ -147,9 +149,8 @@ export default function Header() {
 
     } catch (e) {
       console.error(e);
-    }
+    } 
   };
-
 
   return (
   <>
@@ -189,7 +190,7 @@ export default function Header() {
               {userData?.image !== null ? (
                 <Image
                 alt="userImage"
-                  src={userData.image}
+                  src={`${apiUrls}${userData.image}`}
                   height={20}
                   width={40}
                   className="rounded-[100%] w-[40px] h-[40px] ring-4 ring-sky-400"
@@ -217,68 +218,104 @@ export default function Header() {
         <Modal>
           <UserSteps />
         </Modal>
+
         <ModalSecondary>
-          <form id={"form"}>
+          <div 
+          >
             <div className="text-md font-bold border border-gray-300  px-4 inline-block p-2 rounded-t-lg border-b-0 relative">
               Account Settings
               <div className="absolute w-[100%] left-0 -bottom-1  bg-white h-[4px] z-1"></div>
             </div>
-            <div className="flex flex-col items-end gap-3 py-6 px-6 border border-gray-300  rounded-r-lg rounded-b-lg">
+            <Formik
+            enableReinitialize
+            initialValues={inputValue} validationSchema={editUsersSchemea}
+          onSubmit={handleEditUser}
+          key={userData?._id}>
+            <Form className="flex flex-col items-end gap-3 py-6 px-6 border border-gray-300  rounded-r-lg rounded-b-lg">
               <div className="flex items-center gap-4">
                 <label htmlFor="name" className="text-sm font-bold">
                   Name:
                 </label>
-                <input
-                  value={inputValue.name}
+                <div>
+                <Field
                   id="name"
                   name="name"
                   type="text"
                   placeholder="name"
-                  onChange={handleChangeValue}
                   className="w-[300px] px-2 py-1 placeholder:text-[10px]  text-blueGray-600 bg-transparent rounded text-sm border-0 shadow outline-none ring-1 ring-gray-300 focus:outline-none focus:ring-2  focus:ring-black"
                 />
+                 <ErrorMessage name="name">
+              {(msg) => (
+                <div className="text-red-600 text-center text-sm py-1 bg-red-100 ring-1 rounded  ring-red-600">
+                  {msg}
+                </div>
+              )}
+            </ErrorMessage>
+              </div>
+             
               </div>
               <div className="flex items-center gap-4">
                 <label htmlFor="username" className="text-sm font-bold">
                   Username:
                 </label>
-                <input
-                  value={inputValue.username}
+                <div>
+                <Field
                   id="username"
                   name="username"
                   type="text"
                   placeholder="Username"
-                  onChange={handleChangeValue}
                   className="w-[300px] px-2 py-1  placeholder:text-[10px] text-blueGray-600 bg-transparent rounded text-sm border-0 shadow outline-none ring-1 ring-gray-300 focus:outline-none focus:ring-2  focus:ring-black"
                 />
+                 <ErrorMessage name="username">
+              {(msg) => (
+                <div className="text-red-600 text-center text-sm py-1 bg-red-100 ring-1 rounded  ring-red-600">
+                  {msg}
+                </div>
+              )}
+            </ErrorMessage>
+            </div>
               </div>
               <div className="flex items-center gap-4">
                 <label htmlFor="emailAddress" className="text-sm font-bold">
                   Email Address:
                 </label>
-                <input
-                  value={inputValue.emailAddress}
+                <div>
+                <Field
                   id="emailAddress"
                   name="emailAddress"
                   type="text"
-                  onChange={handleChangeValue}
                   placeholder="Email Address"
                   className="w-[300px] px-2 py-1 placeholder:text-[10px] text-blueGray-600 bg-transparent rounded text-sm border-0 shadow outline-none ring-1 ring-gray-300 focus:outline-none focus:ring-2  focus:ring-black"
                 />
+                 <ErrorMessage name="emailAddress">
+              {(msg) => (
+                <div className="text-red-600 text-center text-sm py-1 bg-red-100 ring-1 rounded  ring-red-600">
+                  {msg}
+                </div>
+              )}
+            </ErrorMessage>
+            </div>
               </div>
               <div className="flex items-center gap-4">
                 <label htmlFor="password" className="text-sm font-bold">
                   Password:
                 </label>
-                <input
-                  value={inputValue.password}
+                <div>
+                <Field
                   id="password"
                   name="password"
                   type="password"
                   placeholder="password"
-                  onChange={handleChangeValue}
                   className="w-[300px] px-2 py-1 placeholder:text-[10px] text-blueGray-600 bg-transparent rounded text-sm border-0 shadow outline-none ring-1 ring-gray-300 focus:outline-none focus:ring-2  focus:ring-black"
                 />
+                  <ErrorMessage name="password">
+              {(msg) => (
+                <div className="text-red-600 text-center text-sm py-1 bg-red-100 ring-1 rounded  ring-red-600">
+                  {msg}
+                </div>
+              )}
+            </ErrorMessage>
+              </div>
               </div>
               <div className="flex items-center gap-4">
                 <label htmlFor="image" className="text-sm font-bold">
@@ -303,6 +340,7 @@ export default function Header() {
                       placeholder="upload image"
                       onChange={handleChangeValue}
                       className="hidden "
+                      accept="image/*"
                     />
                   </div>
                 </div>
@@ -311,12 +349,14 @@ export default function Header() {
                 <PrimaryButton
                   outerStyle="bg-transparent hover:bg-sky-400 text-black ring-1 ring-black px-4 rounded-[8px]"
                   title="Save"
-                  onClick={handleEditUser}
+                  type="submit"
                 />
               </div>
-            </div>
-          </form>
+            </Form>
+            </Formik>
+          </div>
         </ModalSecondary>
+        
         <UserCreatedStoriesSteps/>
       </div>
     </div>

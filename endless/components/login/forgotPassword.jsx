@@ -12,10 +12,10 @@ export default function ForgotPassword({onNext}) {
     emailAddress: ""
   };
 
-  const {handleNotified} = UseStore();
+  const {handleNotified , apiUrls} = UseStore();
 
   const handleSendOtp = async (values , {resetForm}) => {
-    const res = await  axios.post("http://localhost:4000/sendOtp", values ,  {
+    const res = await  axios.post(`${apiUrls}sendOtp`, values ,  {
       validateStatus: function (status) {
         return status >= 200 && status <= 500;
       },

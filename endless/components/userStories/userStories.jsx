@@ -1,10 +1,11 @@
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { FaEdit } from "react-icons/fa";
 import { FaCheck } from "react-icons/fa6";
 import { RxCross1 } from "react-icons/rx";
+import UseStore from "../store/useStore";
 
 export default function UserStories() {
   const [startDate, setStartDate] = useState(new Date());
@@ -19,7 +20,9 @@ export default function UserStories() {
     archivedChapters: false,
   });
 
- 
+  const {apiUrls} = UseStore()
+  const titleRef = useRef(null)
+
 // Store values in [userStoriesValue] State
   const handleChangeValue = (e) => {
     const { value, checked, name } = e.target;
@@ -69,7 +72,7 @@ export default function UserStories() {
 
     if(localStorage.getItem('token')){
     await axios
-      .get("http://localhost:4000/getUserSteps", {
+      .get(`${apiUrls}getUserSteps`, {
         headers: { Authorization: "Bearer " + localStorage.getItem("token") },
       })
       .then((res) => {
@@ -86,7 +89,7 @@ export default function UserStories() {
 //Calling handlegetUserSteps
   useEffect(() => {
     handlegetUserSteps();
-  }, []);
+  }, [apiUrls]);
 
 
 //Toggling the ContentEditable using the index and StepData.length [...see handlegetUserSteps] 
@@ -96,30 +99,33 @@ export default function UserStories() {
       updated[index] = check;
       return updated;
     });
+    titleRef.current.focus()
   };
 
 
 // Post routes for editing title
   const handlePostContentEditable = async (value) => {
-    await axios.post('http://localhost:4000/editUserSteps' ,value )
+    await axios.post(`${apiUrls}editUserSteps` ,value )
   }
 
 //Changing Title in [stepsData] and calling handlePostContentEditable
   const handleContentEditable = ( index) => {
+    if(contentTitle){
     setStepsData((val) => {
        const  updatedStepsData =  [...val];
        updatedStepsData[index].userSteps[0].title =  contentTitle;
        handlePostContentEditable(updatedStepsData[index])
        return  updatedStepsData;
     });
-
+    setContentTitle()
+  }
     handleToggleContentEditable(index, false);
   };
 
 
 //Routes for Deleteing steps
   const handleContentDelete = async (id) => {
-    await axios.post('http://localhost:4000/deleteUserSteps' ,{id})
+    await axios.post(`${apiUrls}deleteUserSteps` ,{id})
     setStepsData((val)=> {
       const filter = val.filter((val)=> val._id !== id)
       return filter
@@ -127,8 +133,8 @@ export default function UserStories() {
   }
 
   return (
-   <>
-      <div className="flex justify-center items-center gap-3 py-6 px-6 border  border-gray-300 rounded-tr-lg ">
+   <div className="h-[100%]">
+      <div className="flex justify-center items-center gap-3 py-6 px-6 border  border-gray-300 rounded-tr-lg">
         <div>
           <DatePicker
             selected={startDate}
@@ -183,7 +189,7 @@ export default function UserStories() {
           </div>
         </button>
       </div>
-      <div className="flex justify-between pb-24  p-4 border border-gray-300 border-t-0 rounded-b-lg">
+      <div className="flex justify-between pb-24  p-4 border border-gray-300 border-t-0 rounded-b-lg h-[70%] overflow-y-scroll">
         <table className="w-[100%] border-separate border-spacing-2">
           <thead className="font-bold">
             <tr>
@@ -200,11 +206,12 @@ export default function UserStories() {
                 <tr key={index}>
                   <td>{index + 1}</td>
                   <td>{val.date.split("T")[0]}</td>
-                  <td>
+                  <td className="w-[25%]">
                     <div className="flex items-center justify-between px-4">
                       <div
-                        className={`w-[s] ${
-                          !toggleContentEditable[index] && "truncate"
+                      ref={titleRef}
+                        className={`w-[80%] p-1 ${
+                          !toggleContentEditable[index] ? "truncate" : "border-2 border-gray-300 rounded-lg"
                         } `}
                         contentEditable={toggleContentEditable[index]}
                         onInput={(e) => setContentTitle(e.target.textContent)}
@@ -273,6 +280,6 @@ export default function UserStories() {
           </tbody>
         </table>
       </div>
-    </>
+    </div>
   );
 }

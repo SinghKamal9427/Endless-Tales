@@ -1,0 +1,27 @@
+[
+    {
+    "name" : "Adam",
+    "gender"  : "Male"
+} , {
+    "name" : "Matilda",
+    "gender"  : "Female"
+}, {
+    "name" : "Thomas",
+    "gender"  : "Male"
+}, {
+    "name" : "Dorothy",
+    "gender"  : "Boy"
+}, {
+    "name" : "Domi",
+    "gender"  : "Female"
+}, {
+    "name" : "Emily",
+    "gender"  : "Female"
+}, {
+    "name" : "Daniel",
+    "gender"  : "Male"
+}, {
+    "name" : "James",
+    "gender"  : "Male"
+}
+]

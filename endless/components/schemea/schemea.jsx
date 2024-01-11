@@ -46,3 +46,10 @@ export const resetPasswordUserSchemea = Yup.object().shape({
   .min(6, "Password must be at least 6 characters")
   .required("Password is required"),
 })
+
+export const editUsersSchemea = Yup.object().shape({
+  name : Yup.string().min(2, "Must be at least 2 characters").required("Name is required"),
+  username : Yup.string().min(4 , "Must be at least 4 characters").required("Username is required"),
+  emailAddress : Yup.string().email().required("Email address is required"),
+  password : Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
+})

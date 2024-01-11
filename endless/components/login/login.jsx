@@ -11,12 +11,12 @@ export default function Login({ onNext, toggleShow }) {
     emailAddress: "",
     password: "",
   };
-  const { HandleGetUser, setUserData, handleNotified , handleIsAccountModal} = UseStore();
+  const { HandleGetUser, setUserData, handleNotified , handleIsAccountModal , apiUrls} = UseStore();
 
   const handleLoginSubmit = async (values , {resetForm}) => {
     try {
       const res = await axios.post(
-        "http://localhost:4000/LoginUsers",
+        `${apiUrls}LoginUsers`,
         {
           values,
         },
@@ -102,7 +102,7 @@ export default function Login({ onNext, toggleShow }) {
         </Formik>
       </div>
       <div className="text-sm py-4 from-stone-500">
-        Don't have account?{" "}
+        Don&apos;t have account?
         <span
           className="font-bold cursor-pointer hover:text-sky-400"
           onClick={() => toggleShow()}

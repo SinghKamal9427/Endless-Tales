@@ -24,13 +24,13 @@ const StepBar = () => {
   };
 
   const list = [
-    <StepFirst onNext={onNext} />,
-    <StepSecond onNext={onNext} />,
-    <StepThird onNext={onNext} />,
-    <StepForth onNext={onNext} />,
-    <StepFifth onNext={onNext} />,
-    <StepSixth onNext={onNext} />,
-    <StepSeventh onNext={onNext} />,
+    <StepFirst onNext={onNext} key={1}/>,
+    <StepSecond onNext={onNext} key={2}/>,
+    <StepThird onNext={onNext} key={3}/>,
+    <StepForth onNext={onNext} key={4}/>,
+    <StepFifth onNext={onNext} key={5}/>,
+    <StepSixth onNext={onNext} key={6}/>,
+    <StepSeventh onNext={onNext} key={7}/>,
   ];
 
   const stepsCount = list.length;

@@ -13,7 +13,7 @@ export default function Register({onNext , toggleShow }) {
     password: "",
   };
 
-  const { registerUser, setRegisterUser, handleNotified , handleIsAccountModal} = UseStore();
+  const { registerUser, setRegisterUser, handleNotified , handleIsAccountModal ,apiUrls} = UseStore();
 
   const handleRegisterUsers = async (values) => {
     const User = {
@@ -23,7 +23,7 @@ export default function Register({onNext , toggleShow }) {
     };
     try {
       const res = await axios.post(
-        "http://localhost:4000/RegisterUsers",
+        `${apiUrls}RegisterUsers`,
         User,
         {
           validateStatus: function (status) {

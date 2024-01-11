@@ -1,11 +1,11 @@
 import Image from "next/image";
 import StepSv from "../../public/assets/step7.png";
-import { useContext, useRef, useState } from "react";
-import { Context } from "../store/createContextStore";
+import { useRef, useState } from "react";
+import UseStore from "../store/useStore";
 import axios from "axios";
 
 export default function StepSeventh({ onNext }) {
-  const { data, setData } = useContext(Context);
+  const { data, setData , apiUrls  , handleNotified} = UseStore();
   const [inputValue, setInputValue] = useState();
   const [showError, setShowError] = useState(false);
   const inputRef = useRef(null);
@@ -32,12 +32,17 @@ export default function StepSeventh({ onNext }) {
   }) */
 
   const handleSendUserStepData = async (userData) => {
+    if(userData.length > 0 && userData[0].id === 1) {
     try {
-     await axios.post("http://localhost:4000/userSteps",userData,{
+     await axios.post(`${apiUrls}userSteps`,userData,{
       headers: { Authorization: "Bearer " + localStorage.getItem("token") },
      });
+     handleNotified("Story created successfully" , "success")
     } catch (e) {
       console.error(e);
+      handleNotified("Login before creating story" , "error")
+    } }else{
+      handleNotified("Please recreate story" , "warning")
     }
   };
 
@@ -55,6 +60,7 @@ export default function StepSeventh({ onNext }) {
       setShowError(false);
       return handleSendUserStepData(newData);
     }
+
   };
 
   return (

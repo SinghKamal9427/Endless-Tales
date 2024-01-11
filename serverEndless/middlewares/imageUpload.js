@@ -3,7 +3,10 @@ import path from "path";
 
 /* export const upload = multer({dest : 'uploads/'}) */
 
-const storage = multer.diskStorage({
+
+//FOR DISK STORAGE
+
+ const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "uploads/images");
   },
@@ -15,6 +18,9 @@ const storage = multer.diskStorage({
     );
   },
 });
+
+/* //FOR Storing in AWS 
+const storage = multer.memoryStorage() */
 
 
 export const  Upload = multer({storage: storage})

@@ -13,11 +13,11 @@ export default function ResetPassword({ onNext }) {
     password: "",
   })
 
-  const { resetPasswordUser , handleNotified , handleIsAccountModal } = UseStore();
+  const { resetPasswordUser , handleNotified , handleIsAccountModal,apiUrls } = UseStore();
 
   const handleResetPasswordSubmit = async (values , {resetForm}) => {
 
-   const res =  await axios.post("http://localhost:4000/resetUserPassword" , {
+   const res =  await axios.post(`${apiUrls}resetUserPassword` , {
         emailAddress : resetPasswordUser,
         password: values.password
     })
@@ -35,7 +35,7 @@ export default function ResetPassword({ onNext }) {
 
   const handlegetResetPasswordUser = async () => {
    const res =  await axios.post(
-      "http://localhost:4000/getresetUser",
+    `${apiUrls}getresetUser`,
       resetPasswordUser
     );
     setUserValue((val) => ({...val , emailAddress: res.data.emailAddress}))

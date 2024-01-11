@@ -8,14 +8,14 @@ import axios from "axios";
 import UseStore from "../store/useStore";
 
 export default function OtpValidate({ onNext }) {
-  const { setResetPasswordUser, handleNotified } = UseStore();
+  const { setResetPasswordUser, handleNotified , apiUrls } = UseStore();
 
   const initialValues = {
     otp: "",
   };
 
   const handleSendOtp = async (values , {resetForm}) => {
-    const res = await axios.post("http://localhost:4000/validataOtp", values, {
+    const res = await axios.post(`${apiUrls}validataOtp`, values, {
       validateStatus: function (status) {
         return status >= 200 && status <= 500;
       },

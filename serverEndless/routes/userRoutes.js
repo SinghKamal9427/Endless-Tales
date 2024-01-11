@@ -14,6 +14,7 @@ import {
   getUserSteps,
   editUserSteps,
   deleteUserSteps,
+  getUserAudio,
 } from "../controllers/userControllers.js";
 import { Auth } from "../middlewares/auth.js";
 import { Upload } from "../middlewares/imageUpload.js";
@@ -45,5 +46,7 @@ router.get("/getUserSteps" , Auth , getUserSteps)
 router.post("/editUserSteps" , editUserSteps)
 
 router.post("/deleteUserSteps" ,deleteUserSteps)
+
+router.get("/getUserAudio" , getUserAudio)
 
 export default router;

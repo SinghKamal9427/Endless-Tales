@@ -1,6 +1,7 @@
 import { RegisterModel, UserSteps } from "../db/models/userModel.js";
 import Jwt from "jsonwebtoken";
-import { Transporter } from "../middlewares/nodemailerC.js";
+import { Transporter } from "../middlewares/nodemailerC.js";/* 
+import { UploadImageAWS, GetUploadedImageAWS } from "../awsS3/aswS3.js"; */
 
 let otp_ = {};
 
@@ -56,29 +57,55 @@ export const LoginUsers = async (req, res) => {
 
 export const getUsers = async (req, res) => {
   const reqData = req.user.userId;
+
   try {
     const user = await RegisterModel.findById(reqData);
-    res.send(user);
+
+    if (user) {
+      /*   const key = user.image;
+      const imageUrl = await GetUploadedImageAWS(key);
+
+      console.log(imageUrl, "url"); */
+
+      const dummyImage = "uploads/images/user.png";
+
+      const resData = {
+        dob: user.dob,
+        emailAddress: user.emailAddress,
+        image: user.image !== "" ? user.image : dummyImage,
+        password: user.password,
+        name: user.name,
+        username: user.username,
+        _id: user._id,
+      };
+      res.send(resData);
+    }
   } catch (err) {
     console.error(err);
   }
 };
 
 export const editUsers = async (req, res) => {
-  const { name, username, emailAddress, password } = req.body;
+  const { name, username, emailAddress, password, _id } = req.body;
 
-  const imageUrl =
-    req.protocol +
-    "://" +
-    req.get("host") +
-    "/uploads/images/" +
-    req.file?.filename;
+  let fileLocation = "";
+
+  if (req.file) {
+    fileLocation = `${req.file.destination}/${req.file.filename}`;
+  }
+  /*  const file = req.file;
+   let imageUrl = "";
+
+ if (file) {
+    imageUrl = await UploadImageAWS(file);
+  } */
 
   const userData = {
-    dob: name,
+    name: name,
+    username: username,
     emailAddress: emailAddress,
     password: password,
-    image: req.file && imageUrl,
+    image: req.file && fileLocation,
   };
 
   /*  const checkSameInputUser = (obj1 , obj2) => {
@@ -89,7 +116,7 @@ export const editUsers = async (req, res) => {
   } */
 
   try {
-    const user = await RegisterModel.findById(username);
+    const user = await RegisterModel.findById(_id);
     const userEmailDuplicate = await RegisterModel.find({
       emailAddress: emailAddress,
     });
@@ -104,15 +131,15 @@ export const editUsers = async (req, res) => {
       res.status(409).json({ message: "Email Already Exists " });
     } else {
       if (user) {
-        await RegisterModel.updateOne({ _id: username }, userData);
+        await RegisterModel.updateOne({ _id: _id }, userData);
         res.status(200).json({ message: "Updated Successfully" });
       } else {
         res.status(401).json({ message: "User not found" });
       }
     }
   } catch (e) {
-    res.status(500).json({ message: "Internal server error" });
     console.log(e);
+    res.status(500).json({ message: "Internal server error" });
   }
 };
 
@@ -231,7 +258,7 @@ export const getUserSteps = async (req, res) => {
 };
 
 export const editUserSteps = async (req, res) => {
-  const updateddata = req.body;  
+  const updateddata = req.body;
 
   try {
     const check = await UserSteps.findById(updateddata._id);
@@ -243,27 +270,42 @@ export const editUserSteps = async (req, res) => {
       res.status(404).json({ message: "Not found" });
     }
   } catch (err) {
-    res.status(500).json({message : "Internal Server Error"})
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
 export const deleteUserSteps = async (req, res) => {
-
   const userId = req.body.id;
 
-  try{
+  try {
+    const check = await UserSteps.findById(userId);
 
-    const check = await UserSteps.findById(userId)
-
-    if(check){
-      await UserSteps.deleteOne({_id : userId})
-      res.status(200).json({message:"Story deleted Successfully"})
-    }else{
-      res.status(404).json({message:"error"})
+    if (check) {
+      await UserSteps.deleteOne({ _id: userId });
+      res.status(200).json({ message: "Story deleted Successfully" });
+    } else {
+      res.status(404).json({ message: "error" });
     }
-  }catch(e){
-res.status(500).json({message : "Internal server error"})
+  } catch (e) {
+    res.status(500).json({ message: "Internal server error" });
   }
+};
 
+export const getUserAudio = async (req, res) => {
+  try {
+    const data = [
+      {
+        audioPath: "uploads/music/demo1.mp3",
+        name: "Story First",
+      },
+      {
+        audioPath: "uploads/music/demo2.mp3",
+        name: "Story Second",
+      },
+    ];
 
-}
+    res.status(200).json(data);
+  } catch (e) {
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
