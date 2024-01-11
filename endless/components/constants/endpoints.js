@@ -1,4 +1,4 @@
 export const Api_Endpoints = {
-    production: 'https://tiny-blue-peacock-suit.cyclic.app/',
+    production: 'https://endless-backend.onrender.com/',
     development : 'http://localhost:4000/'
 }
